@@ -1,0 +1,113 @@
+{
+  "Visdom": {
+    "host": null,
+    "port": null,
+    "env_path": null
+  },
+  "Setup": {
+    "name": "PTIN",
+    "suffix": "CV1",
+    "batch_train": 16,
+    "batch_test": 16,
+    "workers_train": 4,
+    "workers_test": 4,
+    "epochs": 300,
+    "log_interval": 10,
+    "saved_models_path": "saved_models"
+  },
+  "Model": {
+    "class": "model.esresnet_fbsp.ESResNeXtFBSP",
+    "args": {
+      "n_fft": 2048,
+      "hop_length": 561,
+      "win_length": 1654,
+      "window": "blackmanharris",
+      "normalized": true,
+      "onesided": true,
+      "spec_height": -1,
+      "spec_width": -1,
+      "num_classes": 50,
+      "apply_attention": true,
+      "pretrained": true
+    }
+  },
+  "Optimizer": {
+    "class": "torch.optim.Adam",
+    "args": {
+      "lr": 2.5e-4,
+      "betas": [0.9, 0.999],
+      "eps": 1e-8,
+      "weight_decay": 5e-4
+    }
+  },
+  "Scheduler": {
+    "class": "utils.lr_scheduler.WarmUpExponentialLR",
+    "args": {
+      "gamma": 0.985,
+      "cold_epochs": 5,
+      "warm_epochs": 10
+    }
+  },
+  "Dataset": {
+    "class": "utils.datasets.ESC50",
+    "args": {
+      "root": "/path/to/ESC50",
+      "sample_rate": 44100,
+      "fold": 1,
+      "training": {"key": "train", "yes": true, "no": false}
+    }
+  },
+  "Transforms": [
+    {
+      "class": "utils.transforms.ToTensor1D",
+      "args": {}
+    },
+    {
+      "class": "utils.transforms.RandomFlip",
+      "args": {"p": 0.5},
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomScale",
+      "args": {"max_scale": 1.5},
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomPadding",
+      "args": {"out_len": 220500},
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomCrop",
+      "args": {"out_len": 220500},
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomPadding",
+      "args": {"out_len": 220500, "train": false},
+      "train": false
+    },
+    {
+      "class": "utils.transforms.RandomCrop",
+      "args": {"out_len": 220500, "train": false},
+      "train": false
+    }
+  ],
+  "Metrics": {
+    "Performance": {
+      "window_name": null,
+      "x_label": "#Epochs",
+      "y_label": "Accuracy",
+      "width": 1890,
+      "height": 416,
+      "lines": [
+        {
+          "line_label": "Val. Acc.",
+          "class": "ignite.metrics.Accuracy",
+          "args": {},
+          "is_checkpoint": true
+        }
+      ]
+    }
+  }
+}
