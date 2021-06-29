@@ -11,6 +11,12 @@ In this paper, we present a new time-frequency transformation layer that is base
 
 Additionally, we assess the increase of model robustness against additive white Gaussian noise and reduction of an effective sample rate introduced by the proposed layer and demonstrate that the fbsp-layer improves the model’s ability to withstand signal perturbations, in comparison to STFT-based training. For the sake of reproducibility, our code is made available.
 
+### Downloading Pre-Trained Weights
+
+The pre-trained model can be downloaded from the [releases](https://github.com/AndreyGuzhov/ESResNeXt-fbsp/releases).
+
+    wget https://github.com/AndreyGuzhov/ESResNeXt-fbsp/releases/download/v0.1/ESResNeXtFBSP_AudioSet.pt
+
 ### How to Run the Model
 
 The required Python version is >= 3.7.
